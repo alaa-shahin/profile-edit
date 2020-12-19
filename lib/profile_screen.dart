@@ -44,7 +44,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         future: fetch(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text("Something went wrong"));
+            return Scaffold(
+                body: Center(child: Text("Something went wrong")),
+                backgroundColor: Colors.white);
           }
           if (snapshot.connectionState == ConnectionState.done) {
             var data = snapshot.data;
