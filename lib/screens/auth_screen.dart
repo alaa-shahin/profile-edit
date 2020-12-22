@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:test_app/auth_form.dart';
+import 'package:test_app/services/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/AuthScreen';
@@ -38,18 +39,35 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userResult.user.uid)
-            .set({
+        var res = await AuthService().createUserDocument(userResult.user.uid, {
           'userName': userName,
           'email': email,
           'age': age,
           'profileImage': profileImage,
-        }).catchError((error) => Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text('Something went wrong, please try again later'),
-                  backgroundColor: Theme.of(context).errorColor,
-                )));
+        });
+        if (null == res) {
+          Scaffold.of(ctx).showSnackBar(SnackBar(
+            content: Text('Successfully registered'),
+            backgroundColor: Theme.of(ctx).errorColor,
+          ));
+          Flushbar(
+            title: "Success",
+            message: "You are registered successfully!",
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          )..show(ctx);
+        } else {
+          Scaffold.of(ctx).showSnackBar(SnackBar(
+            content: Text('Something went wrong, please try again later'),
+            backgroundColor: Theme.of(ctx).errorColor,
+          ));
+          Flushbar(
+            title: "Sorry",
+            message: "Something went wrong!\n Please try again later :(",
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          )..show(ctx);
+        }
       }
     } on FirebaseAuthException catch (e) {
       String message = 'Error Occurred';

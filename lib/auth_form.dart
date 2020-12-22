@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:validators/validators.dart';
 
 class AuthForm extends StatefulWidget {
   static const routeName = '/AuthForm';
@@ -24,11 +25,27 @@ class _AuthFormState extends State<AuthForm> {
   final currentUser = FirebaseAuth.instance.currentUser;
   final fromKey = GlobalKey<FormState>();
   bool _isLogin = true;
-  String _email = '';
+  static String _email = '';
   String _password = '';
   String _userName = '';
   String _age = '';
-  String _profileImage = '';
+  static String _profileImage = '';
+
+  bool isURLValid = isURL(_profileImage);
+
+  bool validateURL(String value) {
+    Pattern pattern =
+        r'^(https?|http)://([-A-Z0-9.]+)(/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?';
+    RegExp regex = new RegExp(pattern, caseSensitive: false);
+    return (!regex.hasMatch(value)) ? false : true;
+  }
+
+  bool validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern, caseSensitive: false);
+    return (!regex.hasMatch(value)) ? false : true;
+  }
 
   Future<void> submit() async {
     final isValid = fromKey.currentState.validate();
@@ -60,10 +77,10 @@ class _AuthFormState extends State<AuthForm> {
                       autocorrect: false,
                       enableSuggestions: false,
                       textCapitalization: TextCapitalization.none,
-                      key: ValueKey('userName'),
+                      key: ValueKey('username'),
                       validator: (val) {
                         if (val.isEmpty || val.length < 3) {
-                          return 'Please enter a least 3 characters';
+                          return 'Please enter at least 3 characters';
                         }
                         return null;
                       },
@@ -76,10 +93,11 @@ class _AuthFormState extends State<AuthForm> {
                       autocorrect: false,
                       enableSuggestions: false,
                       textCapitalization: TextCapitalization.none,
-                      key: ValueKey('Age'),
+                      key: ValueKey('age'),
                       validator: (val) {
-                        if (val.isEmpty || val.length < 2) {
-                          return 'Please enter your Age at least 2 numbers';
+                        if (val.isEmpty ||
+                            !(int.parse(val) <= 120 && int.parse(val) > 0)) {
+                          return 'Please enter your Age from 1 to 120';
                         }
                         return null;
                       },
@@ -88,12 +106,10 @@ class _AuthFormState extends State<AuthForm> {
                       onSaved: (val) => _age = val,
                     ),
                   TextFormField(
-                    autocorrect: false,
-                    enableSuggestions: false,
                     textCapitalization: TextCapitalization.none,
-                    key: ValueKey('email'),
+                    key: ValueKey('Email'),
                     validator: (val) {
-                      if (val.isEmpty || !val.contains('@')) {
+                      if (val.isEmpty || !validateEmail(val)) {
                         return 'Please enter a valid email address';
                       }
                       return null;
@@ -103,7 +119,7 @@ class _AuthFormState extends State<AuthForm> {
                     onSaved: (val) => _email = val,
                   ),
                   TextFormField(
-                    key: ValueKey('password'),
+                    key: ValueKey('Password'),
                     validator: (val) {
                       if (val.isEmpty || val.length < 7) {
                         return 'Please enter a least 7 characters';
@@ -120,10 +136,10 @@ class _AuthFormState extends State<AuthForm> {
                       autocorrect: false,
                       enableSuggestions: false,
                       textCapitalization: TextCapitalization.none,
-                      key: ValueKey('Profile Image Link'),
+                      key: ValueKey('Profile Image'),
                       validator: (val) {
-                        if (val.isEmpty) {
-                          return 'Please enter URL correct image';
+                        if (val.isEmpty || !validateURL(val)) {
+                          return 'Please enter a valid URL for an image';
                         }
                         return null;
                       },
@@ -138,10 +154,12 @@ class _AuthFormState extends State<AuthForm> {
                     RaisedButton(
                       child: Text(_isLogin ? 'Login' : 'Sign Up'),
                       onPressed: submit,
+                      color: Colors.blue,
+                      textColor: Colors.white,
                     ),
                   if (!widget._isLoading)
                     FlatButton(
-                      textColor: Theme.of(context).primaryColor,
+                      textColor: Colors.blue,
                       onPressed: () {
                         setState(() {
                           _isLogin = !_isLogin;
