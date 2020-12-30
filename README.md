@@ -5,7 +5,7 @@ The simplest way to obtain the code is using the github .zip feature. Click [her
 
 The more complicated and easier to update method is using git. You'll need to download/setup git or some other client. When installed, open a terminal and visit the directory where you unzipped the source code and type in:
 ```sh
-$ git clone https://github.com/alaa-shahin/meal.git
+$ git clone https://github.com/alaa-shahin/profile-edit.git
 ```
 ## Steps To Get Started:
 
