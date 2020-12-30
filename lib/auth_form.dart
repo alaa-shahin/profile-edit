@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:test_app/screens/profile_screen.dart';
+import 'package:test_app/services/auth_service.dart';
 import 'package:validators/validators.dart';
 
 class AuthForm extends StatefulWidget {
@@ -11,11 +13,13 @@ class AuthForm extends StatefulWidget {
     String age,
     String profileImage,
     bool isLogin,
+    bool isGoogleLogin,
     BuildContext ctx,
   ) submitFn;
+  final void Function() signupWithGoogle;
   final bool _isLoading;
 
-  AuthForm(this.submitFn, this._isLoading);
+  AuthForm(this.submitFn, this._isLoading, this.signupWithGoogle);
 
   @override
   _AuthFormState createState() => _AuthFormState();
@@ -25,6 +29,7 @@ class _AuthFormState extends State<AuthForm> {
   final currentUser = FirebaseAuth.instance.currentUser;
   final fromKey = GlobalKey<FormState>();
   bool _isLogin = true;
+  bool _isGoogleLogin = false;
   static String _email = '';
   String _password = '';
   String _userName = '';
@@ -50,12 +55,16 @@ class _AuthFormState extends State<AuthForm> {
   Future<void> submit() async {
     final isValid = fromKey.currentState.validate();
     FocusScope.of(context).unfocus();
-
     if (isValid) {
       fromKey.currentState.save();
       widget.submitFn(_email.trim(), _password.trim(), _userName.trim(), _age,
-          _profileImage, _isLogin, context);
+          _profileImage, _isLogin, _isGoogleLogin, context);
     }
+  }
+
+  Future<void> googleSignup() async {
+    FocusScope.of(context).unfocus();
+    widget.signupWithGoogle();
   }
 
   @override
@@ -153,9 +162,68 @@ class _AuthFormState extends State<AuthForm> {
                   if (!widget._isLoading)
                     RaisedButton(
                       child: Text(_isLogin ? 'Login' : 'Sign Up'),
-                      onPressed: submit,
+                      onPressed: () {
+                        submit();
+                      },
                       color: Colors.blue,
                       textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                    ),
+                  Text(
+                    'Or',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                  if (!_isLogin)
+                    RaisedButton(
+                      color: Colors.white,
+                      textColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(
+                            image: AssetImage('assets/images/google_logo.png'),
+                            height: 35.0,
+                          ),
+                          Padding(padding: const EdgeInsets.only(left: 10)),
+                          Text("Signin with Google"),
+                        ],
+                      ),
+                      onPressed: () async {
+                        await AuthService().googleSignup();
+                        Navigator.of(context)
+                            .pushNamed(ProfileScreen.routeName);
+                      },
+                    ),
+                  if (_isLogin)
+                    RaisedButton(
+                      color: Colors.white,
+                      textColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40)),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image(
+                            image: AssetImage('assets/images/google_logo.png'),
+                            height: 35.0,
+                          ),
+                          Padding(padding: const EdgeInsets.only(left: 10)),
+                          Text("Signin with Google"),
+                        ],
+                      ),
+                      onPressed: () async {
+                        await AuthService().googleSignup();
+                        Navigator.of(context)
+                            .pushNamed(ProfileScreen.routeName);
+                      },
                     ),
                   if (!widget._isLoading)
                     FlatButton(

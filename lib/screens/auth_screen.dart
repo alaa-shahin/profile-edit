@@ -2,10 +2,11 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:test_app/auth_form.dart';
+import 'package:test_app/screens/profile_screen.dart';
 import 'package:test_app/services/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
-  static const routeName = '/AuthScreen';
+  static const routeName = '/';
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -22,6 +23,7 @@ class _AuthScreenState extends State<AuthScreen> {
     String age,
     String profileImage,
     bool isLogin,
+    bool isGoogleLogin,
     BuildContext ctx,
   ) async {
     UserCredential userResult;
@@ -29,11 +31,13 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         _isLoading = true;
       });
+
       if (isLogin) {
         userResult = await _auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
+        Navigator.of(context).pushNamed(ProfileScreen.routeName);
       } else {
         userResult = await _auth.createUserWithEmailAndPassword(
           email: email,
@@ -45,6 +49,8 @@ class _AuthScreenState extends State<AuthScreen> {
           'age': age,
           'profileImage': profileImage,
         });
+        Navigator.of(context).pushNamed(ProfileScreen.routeName);
+
         if (null == res) {
           Scaffold.of(ctx).showSnackBar(SnackBar(
             content: Text('Successfully registered'),
@@ -102,10 +108,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: AuthForm(
-        _submitAuthForm,
-        _isLoading,
-      ),
+      body: AuthForm(_submitAuthForm, _isLoading, AuthService().googleSignup),
     );
   }
 }

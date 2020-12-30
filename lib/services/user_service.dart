@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UserServices {
+class UserService {
   Future<dynamic> updateUserData(
       String _newUserName,
       String _newAge,

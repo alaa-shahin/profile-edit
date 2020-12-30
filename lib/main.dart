@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_app/screens/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,15 +19,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, snapshot) {
-            if (!snapshot.hasData) {
-              return AuthScreen();
-            } else {
-              return ProfileScreen();
-            }
-          }),
+      initialRoute: '/',
+      routes: {
+        AuthScreen.routeName: (ctx) => AuthScreen(),
+        ProfileScreen.routeName: (ctx) => ProfileScreen(),
+      },
     );
   }
 }

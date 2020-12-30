@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:test_app/screens/auth_screen.dart';
 import 'package:test_app/services/user_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,10 +21,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: UserServices().fetchCurrentUserData(currentUser.email),
+        future: UserService().fetchCurrentUserData(currentUser.email),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            print(snapshot.error);
             return Scaffold(
                 appBar: AppBar(
                   title: Text('Your Profile'),
@@ -47,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onChanged: (item) {
                         if (item == 'logout') {
                           FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pushNamed(AuthScreen.routeName);
                         }
                       },
                     ),
@@ -54,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 body: Center(
                   child: Text(
-                    "Sorry, Something went wrong!\n But We're working on it.\n\nIf the issue still persists please contact us at alaashahin743@gmail.com",
+                    "Sorry, Something went wrong!\n But We're working on it.\n\nIf the issue still persists please contact us at alaashahin743@gmail.com\n\nGo to logout then Try to sign up first",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.red,
@@ -89,6 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onChanged: (item) {
                         if (item == 'logout') {
                           FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pushNamed(AuthScreen.routeName);
                         }
                       },
                     ),
@@ -189,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                     _formKey.currentState.save();
 
-                                    dynamic result = await UserServices()
+                                    dynamic result = await UserService()
                                         .updateUserData(
                                             _newUserName,
                                             _newAge,
