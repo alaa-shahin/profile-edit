@@ -17,6 +17,7 @@ $ git clone https://github.com/alaa-shahin/profile-edit.git
 
 ## Screenshots:
 
+![Splash Screen](https://github.com/alaa-shahin/profile-edit/blob/master/edit%20profile/Splash%20Screen.png "Splash Screen")
 ![Edit Username Success](https://github.com/alaa-shahin/profile-edit/blob/master/edit%20profile/username%20success.png "Edit Username Success")
 ![Edit Username Error](https://github.com/alaa-shahin/profile-edit/blob/master/edit%20profile/username%20validation.png "Edit Username Error")
 ![Edit Age Success](https://github.com/alaa-shahin/profile-edit/blob/master/edit%20profile/age%20suucess.png "Edit Age Success")

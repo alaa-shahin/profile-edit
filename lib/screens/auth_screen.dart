@@ -6,7 +6,7 @@ import 'package:test_app/screens/profile_screen.dart';
 import 'package:test_app/services/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/AuthScreen';
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
