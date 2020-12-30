@@ -192,7 +192,7 @@ class _AuthFormState extends State<AuthForm> {
                             height: 35.0,
                           ),
                           Padding(padding: const EdgeInsets.only(left: 10)),
-                          Text("Signin with Google"),
+                          Text("SignUp with Google"),
                         ],
                       ),
                       onPressed: () async {
@@ -216,7 +216,7 @@ class _AuthFormState extends State<AuthForm> {
                             height: 35.0,
                           ),
                           Padding(padding: const EdgeInsets.only(left: 10)),
-                          Text("Signin with Google"),
+                          Text("SignIn with Google"),
                         ],
                       ),
                       onPressed: () async {
